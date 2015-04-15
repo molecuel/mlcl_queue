@@ -13,7 +13,7 @@ var mlcl_queue = (function () {
                 _this.amqconn = amqplib.connect(molecuel.config.queue.uri);
                 _this.amqconn.then(function (conn) {
                     _this.amqchan = conn.createChannel();
-                    mlcl_queue.molecuel.emit('mlcl::queue::init:post');
+                    mlcl_queue.molecuel.emit('mlcl::queue::init:post', _this);
                 }).then(null, function (err) {
                     mlcl_queue.molecuel.log('Error while connecting queue system: ' + err);
                     process.exit(1);
