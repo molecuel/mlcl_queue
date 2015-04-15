@@ -29,7 +29,6 @@ describe('mlcl_queue', function() {
     }
 
     molecuel.log = console.log;
-
     done();
   });
 
