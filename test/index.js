@@ -17,6 +17,12 @@ describe('mlcl_queue', function() {
     util.inherits(mlcl, EventEmitter);
     molecuel = new mlcl();
 
+    molecuel.log = {};
+    molecuel.log.info = console.log;
+    molecuel.log.error = console.log;
+    molecuel.log.debug = console.log;
+    molecuel.log.warn = console.log;
+
     molecuel.config = { };
     molecuel.config.queue = {
       uri: 'amqp://localhost'
