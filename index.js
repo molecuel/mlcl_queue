@@ -1,5 +1,4 @@
-/// <reference path="./typings/node/node.d.ts"/>
-/// <reference path="./typings/amqplib/amqplib.d.ts"/>
+"use strict";
 var amqplib = require('amqplib');
 var mlcl_queue = (function () {
     function mlcl_queue() {
@@ -15,7 +14,7 @@ var mlcl_queue = (function () {
                     _this.amqchan = conn.createChannel();
                     mlcl_queue.molecuel.emit('mlcl::queue::init:post', _this);
                 }).then(null, function (err) {
-                    mlcl_queue.molecuel.log.error('mlcl_queue', 'Error while connecting queue system: ' + err);
+                    mlcl_queue.molecuel.log('error', 'mlcl_queue', 'Error while connecting queue system: ' + err.message, err);
                     process.exit(1);
                 });
             }
@@ -36,5 +35,5 @@ var mlcl_queue = (function () {
     };
     mlcl_queue._instance = null;
     return mlcl_queue;
-})();
+}());
 module.exports = mlcl_queue.init;

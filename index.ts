@@ -23,7 +23,7 @@ class mlcl_queue {
           this.amqchan = conn.createChannel();
           mlcl_queue.molecuel.emit('mlcl::queue::init:post', this);
         }).then(null, function(err) {
-          mlcl_queue.molecuel.log.error('mlcl_queue', 'Error while connecting queue system: '+ err);
+          mlcl_queue.molecuel.log('error', 'mlcl_queue', 'Error while connecting queue system: '+ err.message, err);
           process.exit(1);
         });
       }
