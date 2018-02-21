@@ -1,9 +1,10 @@
 {
   "name": "mlcl_queue",
   "dependencies": {
+    "amqp10": "^3.6.0",
     "azure-sb": "^0.10.5"
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": {
     "node": ">= 0.10.0"
   },

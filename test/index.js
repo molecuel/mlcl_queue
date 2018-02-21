@@ -25,14 +25,11 @@ describe('mlcl_queue', function() {
 
     molecuel.config = { };
     molecuel.config.queue = {
-      uri: 'Endpoint=sb://npm.servicebus.windows.net/;SharedAccessKeyName=yourkey;SharedAccessKey=XXX=',
+      // $env:AZURE_SERVICEBUS_PROTOCOL="";
+      // $env:AZURE_SERVICEBUS_SASKEYNAME="";
+      // $env:AZURE_SERVICEBUS_SASKEY="";
+      // $env:AZURE_SERVICEBUS_HOST="";
     };
-
-    if(process.env.NODE_ENV == 'dockerdev') {
-      molecuel.config.queue = {
-        uri: 'Endpoint=sb://npm.servicebus.windows.net/;SharedAccessKeyName=yourkey;SharedAccessKey=XXX=',
-      };
-    }
 
     molecuel.log = console.log;
     done();
@@ -47,6 +44,26 @@ describe('mlcl_queue', function() {
       });
       molecuel.emit('mlcl::core::init:post', molecuel);
     });
+
+    it('should send', function(done) {
+      const name = 'testtopic';
+      mlclq.ensureQueue(name, (err) => {
+        if (!err) {
+          var sender = mlclq.client.createSender(name);
+          sender.then(function(s) {
+            var x = s.send({'company': 'inspirationlabs'});
+            return x;
+          })
+          .then(function(result) {
+            done();
+          }).error((err) => {
+            console.log('err');
+            console.log(err);
+          });
+        }
+      });
+    });
+
   });
 
 });
