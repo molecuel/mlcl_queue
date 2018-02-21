@@ -1,14 +1,12 @@
 /// <reference path="./typings/node/node.d.ts"/>
-/// <reference path="./typings/amqplib/amqplib.d.ts"/>
 
-import amqplib = require('amqplib');
+import azure = require('azure-sb');
 
 class mlcl_queue {
 
   private static _instance:mlcl_queue = null;
   public static molecuel;
-  public amqconn:any;
-  public amqchan:any;
+  public bus: any;
 
   constructor() {
     if(mlcl_queue._instance){
@@ -18,14 +16,11 @@ class mlcl_queue {
 
     mlcl_queue.molecuel.once('mlcl::core::init:post', (molecuel) => {
       if(molecuel.config.queue) {
-        this.amqconn = amqplib.connect(molecuel.config.queue.uri);
-        this.amqconn.then((conn) => {
-          this.amqchan = conn.createChannel();
-          mlcl_queue.molecuel.emit('mlcl::queue::init:post', this);
-        }).then(null, function(err) {
-          mlcl_queue.molecuel.log('error', 'mlcl_queue', 'Error while connecting queue system: '+ err.message, err);
-          process.exit(1);
-        });
+        this.bus = azure.createServiceBusService(molecuel.config.queue.uri);
+        mlcl_queue.molecuel.emit('mlcl::queue::init:post', this);
+      } else {
+        mlcl_queue.molecuel.log('error', 'mlcl_queue', 'Could not connect to service bus, no config');
+        process.exit(1);
       }
     });
   }
@@ -37,8 +32,8 @@ class mlcl_queue {
     return mlcl_queue._instance;
   }
 
-  public getChannel():any {
-    return this.amqchan;
+  public getBus():any {
+    return this.bus;
   }
 
   public static init(m):mlcl_queue {

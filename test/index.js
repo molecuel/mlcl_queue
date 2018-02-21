@@ -25,12 +25,12 @@ describe('mlcl_queue', function() {
 
     molecuel.config = { };
     molecuel.config.queue = {
-      uri: 'amqp://localhost'
+      uri: 'Endpoint=sb://npm.servicebus.windows.net/;SharedAccessKeyName=yourkey;SharedAccessKey=XXX=',
     };
 
     if(process.env.NODE_ENV == 'dockerdev') {
       molecuel.config.queue = {
-        uri: 'amqp://192.168.99.100'
+        uri: 'Endpoint=sb://npm.servicebus.windows.net/;SharedAccessKeyName=yourkey;SharedAccessKey=XXX=',
       };
     }
 
@@ -41,40 +41,12 @@ describe('mlcl_queue', function() {
   describe('singleton init', function() {
     it('should initialize', function(done) {
       mlclq = require('../index.js')(molecuel);
-      molecuel.emit('mlcl::core::init:post', molecuel);
       molecuel.on('mlcl::queue::init:post', function(q) {
         queue = q;
         done();
       });
+      molecuel.emit('mlcl::core::init:post', molecuel);
     });
   });
 
-  describe('init queue', function() {
-    it('should send to queue', function(done) {
-      var chan = mlclq.getChannel();
-      chan.then(function(ch) {
-        ch.assertQueue('tasks');
-        ch.sendToQueue('tasks', new Buffer('Queue element'));
-        done();
-      }).then(null, function(err) {
-        should.not.exist(err);
-        done();
-      });
-    });
-
-    it('should get from queue', function(done) {
-      var chan = mlclq.getChannel();
-      chan.then(function(ch) {
-        ch.assertQueue('tasks');
-        ch.consume('tasks', function(msg) {
-          assert('Queue element' === msg.content.toString());
-          ch.ack(msg)
-          done();
-        });
-      }).then(null, function(err) {
-        should.not.exist(err);
-        done();
-      })
-    });
-  });
 });
