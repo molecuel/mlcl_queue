@@ -64,6 +64,14 @@ describe('mlcl_queue', function() {
       });
     });
 
+    it('should disconnect', function(done) {
+      mlclq.client.disconnect()
+      .then(function() { 
+        done();
+      });
+    });    
+
+
   });
 
 });

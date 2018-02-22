@@ -29,14 +29,14 @@ class mlcl_queue {
         '@' + host + '.servicebus.windows.net';
       const uri = 'Endpoint=sb://' + host + '.servicebus.windows.net/;SharedAccessKeyName=' + sasKeyName + ';SharedAccessKey=' + sasKey;
 
-      this.bus = azure.createServiceBusService(molecuel.config.queue.uri);
+      this.bus = azure.createServiceBusService(uri);
       this.client.connect(address)
       .then(() => {
         mlcl_queue.molecuel.emit('mlcl::queue::init:post', this);
       })
       .error((err) => {
         mlcl_queue.molecuel.log('error', 'mlcl_queue', 'Error while connecting queue system: '+ err.message, err); 
-      });
+      })
     });
   }
 
